@@ -124,7 +124,7 @@ An inland sea is a body of salt water cut off from the open sea by a narrow stra
 4. A body that doesn't reach the grid's edge, with at least 30 hexes, is an inland sea.
 
 So a body's connection to the open sea, if it has one, is a strait whose hexes are all next to land: 2 hexes wide at most.
-On the Panama map this finds one inland sea, Laguna de Chiriquí, with 127 hexes.
+On the Panama map this finds two inland seas: Bahía de Almirante, with 51 hexes, and Golfo de Montijo, with 47.
 
 ## Flags
 
@@ -141,24 +141,24 @@ Elevations are in meters.
 
 ```json
 {
-  "hmz2ter_version": "0.1.0",
+  "hmz2ter_version": "0.2.0",
   "heightmap": { "file_name": "pandemokh.hmz", "metadata": { ... } },
   "grid": { "apothem_px": 48, "side_px": 55.43, "columns": 106, "rows": 222, "hex_count": 23479, "hex_area_px": 7981.3 },
-  "rivers": { "file_name": "pandemokh-a48-rivers.json", "hmz2riv_version": "0.1.0", "threshold_km2": 50 },
+  "rivers": { "file_name": "pandemokh-a48-rivers.json", "hmz2riv_version": "0.3.0", "threshold_km2": 50 },
   "rules": { "flats_below_m": 20, ..., "open_max_hexes": 19, "inland_min_hexes": 30, "cliff_above_m": 10, "border_min_pixels": 1000 },
   "method": { "statistics": "...", "lakes": "...", "borders": "...", "cuts": "...", "sea": "...", "inland_seas": "..." },
   "lakes": [ { "name": "Gatun", "seed": { "name": "Gatun", "lon": -79.9038, "lat": 9.1879 }, "elevation_m": 28, "pixels": 294226 }, ... ],
-  "volcanoes": [ { "name": "Barú", "lon": -82.543, "lat": 8.808, "col": 69, "row": 19 }, ... ],
-  "stats": { "landforms": { ... }, "depths": { ... }, "flags": { ... }, "sea_distance": [ 0, 1284, 1082, ... ], ... },
+  "volcanoes": [ { "name": "Barú", "lon": -82.543, "lat": 8.808, "col": 70, "row": 19 }, ... ],
+  "stats": { "landforms": { ... }, "depths": { ... }, "flags": { ... }, "sea_distance": [ 0, 1280, 1120, ... ], ... },
   "hexes": [
     { "col": 48, "row": 0, "landform": "cliffs", "surface": "clear", "biome": "clear", "flags": [ "impassable" ], "center": null,
-      "pixels": 7982, "valid_pixels": 2826, "land_fraction": 0.354,
-      "elevation": { "min": 320, "p5": 372, "median": 525, "p95": 654, "max": 690 }, "relief_m": 282 },
-    { "col": 50, "row": 2, "landform": "hills", "flags": [ "river" ], "center": 147,
+      "pixels": 7982, "valid_pixels": 835, "land_fraction": 0.1046,
+      "elevation": { "min": 346, "p5": 366, "median": 423, "p95": 495, "max": 513 }, "relief_m": 129 },
+    { "col": 50, "row": 3, "landform": "hills", "flags": [ "river" ], "center": 123,
       "pixels": 7982, "valid_pixels": 7982, "land_fraction": 1,
-      "elevation": { "min": 102, "p5": 108, "median": 207, "p95": 449, "max": 593 }, "relief_m": 341 },
-    { "col": 35, "row": 6, "landform": "salt-water", "surface": "clear", "biome": "clear", "depth": "shallow", "sea_distance": 1,
-      "flags": [ "coast" ], "center": null, "pixels": 7982, "valid_pixels": 511, "land_fraction": 0, ... },
+      "elevation": { "min": 83, "p5": 94, "median": 145, "p95": 258, "max": 369 }, "relief_m": 164 },
+    { "col": 36, "row": 7, "landform": "salt-water", "surface": "clear", "biome": "clear", "depth": "shallow", "sea_distance": 1,
+      "flags": [ "coast" ], "center": null, "pixels": 7982, "valid_pixels": 942, "land_fraction": 0.1175, ... },
     ...
   ]
 }
