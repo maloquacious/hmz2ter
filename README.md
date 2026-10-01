@@ -118,13 +118,14 @@ The threshold is 10 m rather than 30 m because at 30 m the Costa Rica cut breaks
 
 An inland sea is a body of salt water cut off from the open sea by a narrow strait.
 
-1. Salt water more than 1 hex from land is **wide water**. Each connected body of wide water is open sea if it reaches the grid's edge.
+1. Salt water more than 2 hexes from land is **wide water**. Each connected body of wide water is open sea if it reaches the grid's edge.
 2. The rest of the salt water joins the nearest body, stepping through salt water. A hex that two bodies reach at the same step joins an open body if either is open, and otherwise the body numbered lowest; bodies are numbered in hex order.
 3. Salt water that no body reaches forms bodies of its own.
 4. A body that doesn't reach the grid's edge, with at least 30 hexes, is an inland sea.
 
-So a body's connection to the open sea, if it has one, is a strait whose hexes are all next to land: 2 hexes wide at most.
-On the Panama map this finds two inland seas: Bahía de Almirante, with 51 hexes, and Golfo de Montijo, with 47.
+So a body's connection to the open sea, if it has one, is a strait whose hexes are all within 2 hexes of land: 4 hexes wide at most, the widest strait small boats can cross.
+A narrower cut-off, 1 hex from land, made the result hinge on single hexes at a strait's mouth: moving the hex centers by one apothem turned Laguna de Chiriquí into open sea and Bahía de Almirante into an inland sea.
+On the Panama map this finds two inland seas: Laguna de Chiriquí, with 125 hexes, and Golfo de Montijo, with 61.
 
 ## Flags
 
@@ -141,7 +142,7 @@ Elevations are in meters.
 
 ```json
 {
-  "hmz2ter_version": "0.2.0",
+  "hmz2ter_version": "0.3.0",
   "heightmap": { "file_name": "pandemokh.hmz", "metadata": { ... } },
   "grid": { "apothem_px": 48, "side_px": 55.43, "columns": 106, "rows": 222, "hex_count": 23479, "hex_area_px": 7981.3 },
   "rivers": { "file_name": "pandemokh-a48-rivers.json", "hmz2riv_version": "0.3.0", "threshold_km2": 50 },

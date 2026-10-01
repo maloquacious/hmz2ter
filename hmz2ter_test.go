@@ -222,12 +222,19 @@ func TestRules(t *testing.T) {
 // Land is 50 m and flat.
 func testInputs(t *testing.T, kind func(col, row int) byte) Inputs {
 	t.Helper()
-	g, err := hmz2ele.NewGrid(4, 90, 100)
+	return testInputsSized(t, 13, 12, kind)
+}
+
+// testInputsSized is testInputs for a grid of the given size.
+func testInputsSized(t *testing.T, columns, rows int, kind func(col, row int) byte) Inputs {
+	t.Helper()
+	side := 8 / math.Sqrt(3)
+	g, err := hmz2ele.NewGrid(4, int(side+1.5*side*float64(columns-1))+1, 8*rows)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if g.Columns != 13 || g.Rows != 12 {
-		t.Fatalf("grid %d × %d, want 13 × 12", g.Columns, g.Rows)
+	if g.Columns != columns || g.Rows != rows {
+		t.Fatalf("grid %d × %d, want %d × %d", g.Columns, g.Rows, columns, rows)
 	}
 	n := g.Columns * g.Rows
 	in := Inputs{
@@ -312,39 +319,47 @@ func TestClassifyCuts(t *testing.T) {
 	}
 }
 
-// hexDistance is the grid distance between two hexes of an even-q grid.
+// hexDistance is the grid distance between two hexes of an odd-q grid.
 func hexDistance(c1, r1, c2, r2 int) int {
-	cube := func(c, r int) (int, int) { return c, r - (c+(c&1))/2 }
+	cube := func(c, r int) (int, int) { return c, r - (c-(c&1))/2 }
 	q1, s1 := cube(c1, r1)
 	q2, s2 := cube(c2, r2)
 	dq, dr := q1-q2, s1-s2
 	return max(abs(dq), abs(dr), abs(dq+dr))
 }
 
-// Open sea in columns 0–2, and a round bay around (8, 6) joined to it by a
-// one-hex channel along row 6.
+// Open sea in columns 0–4, and a round bay around (15, 9) joined to it by a
+// channel width hexes tall, in rows 7 to 7 + width − 1.
 func TestInlandSeas(t *testing.T) {
-	kind := func(col, row int) byte {
-		if col <= 2 || hexDistance(col, row, 8, 6) <= 2 || (row == 6 && col >= 3 && col <= 5) {
-			return 'S'
-		}
-		return 'L'
-	}
 	for _, tc := range []struct {
-		min  int
-		want bool
-	}{{10, true}, {25, false}} {
-		in := testInputs(t, kind)
+		width, strait, min int
+		want               bool
+	}{
+		{1, 1, 10, true},
+		{1, 1, 200, false},
+		{3, 1, 10, false}, // every channel hex is next to land only if it is at most 2 wide
+		{3, 2, 10, true},
+		{4, 2, 10, true},
+		{5, 2, 10, false},
+	} {
+		kind := func(col, row int) byte {
+			if col <= 4 || hexDistance(col, row, 15, 9) <= 4 || (col >= 5 && col <= 11 && row >= 7 && row < 7+tc.width) {
+				return 'S'
+			}
+			return 'L'
+		}
+		in := testInputsSized(t, 22, 18, kind)
+		in.Rules.StraitMax = tc.strait
 		in.Rules.InlandMinHexes = tc.min
 		hexes, err := Classify(in)
 		if err != nil {
 			t.Fatal(err)
 		}
-		if got := slices.Contains(landformAt(hexes, 8, 6).Flags, InlandSea); got != tc.want {
-			t.Errorf("min %d: bay inland %v, want %v", tc.min, got, tc.want)
+		if got := slices.Contains(landformAt(hexes, 15, 9).Flags, InlandSea); got != tc.want {
+			t.Errorf("channel %d, strait %d, min %d: bay inland %v, want %v", tc.width, tc.strait, tc.min, got, tc.want)
 		}
 		if slices.Contains(landformAt(hexes, 0, 6).Flags, InlandSea) {
-			t.Errorf("min %d: open sea is inland", tc.min)
+			t.Errorf("channel %d, strait %d, min %d: open sea is inland", tc.width, tc.strait, tc.min)
 		}
 	}
 }

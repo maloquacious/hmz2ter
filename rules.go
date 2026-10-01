@@ -30,7 +30,9 @@ type Rules struct {
 
 	// A body of salt water is an inland sea if it has at least
 	// InlandMinHexes hexes and is cut off from the open sea by removing
-	// the salt water within StraitMax hexes of land.
+	// the salt water within StraitMax hexes of land. StraitMax matches the
+	// small boats' range, so they can cross every strait into an inland
+	// sea.
 	StraitMax      int `json:"strait_max_hexes"`
 	InlandMinHexes int `json:"inland_min_hexes"`
 
@@ -52,7 +54,7 @@ func DefaultRules() Rules {
 		VolcanicRadiusRealKm: 25,
 		ShallowMax:           12,
 		OpenMax:              19,
-		StraitMax:            1,
+		StraitMax:            2,
 		InlandMinHexes:       30,
 		CliffAbove:           10,
 		BorderMinPixels:      1000,
